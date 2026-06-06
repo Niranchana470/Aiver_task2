@@ -115,5 +115,10 @@ class ConfigLoader:
             "output": self.config.get("output", {}),
             "execution": self.config.get("execution", {}),
             "max_workers": self.config.get("execution", {}).get("max_workers", 10),
-            "check_timeout": self.config.get("execution", {}).get("check_timeout", 300)
+            "check_timeout": self.config.get("execution", {}).get("check_timeout", 300),
+            "alerting": self.config.get("alerting", {}),
+            "autonomous_mode": self.config.get("autonomous_mode", {}),
+            "ai_provider": self.config.get("ai_provider", {}),
+            "guard_rails": self.config.get("guard_rails", {}),
+            "debug": self.config.get("debug", False)
         }

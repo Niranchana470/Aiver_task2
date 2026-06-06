@@ -128,8 +128,16 @@ checks:
     timeout: 300
     parameters:
       endpoints:
+        - url: "https://dv08.in"
+          name: "dv08.in Production"
         - url: "https://httpbin.org"
           name: "Test API"
+        - url: "https://api.github.com"
+          name: "GitHub API"
+        - url: "https://jsonplaceholder.typicode.com"
+          name: "JSONPlaceholder Test API"
+        - url: "https://reqres.in/api"
+          name: "ReqRes API"
 
   CVEScanner:
     enabled: true

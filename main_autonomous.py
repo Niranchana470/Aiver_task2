@@ -39,7 +39,8 @@ class AutonomousSecurityAgent:
         
         # Load configuration
         self.config_loader = ConfigLoader(config_path)
-        self.config = self.config_loader.load()
+        self.config_loader.load()
+        self.config = self.config_loader.to_dict()
         self.logger.info(f"Configuration loaded from: {config_path}")
         
         # Initialize components
