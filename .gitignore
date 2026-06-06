@@ -1,0 +1,112 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+virtualenv/
+
+# PyCharm / IntelliJ
+.idea/
+*.iml
+*.iws
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+*.cover
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Logs
+logs/
+*.log
+
+# Reports and scans
+reports/
+*.json
+*.md
+!README.md
+!QUICK_START.md
+!ARCHITECTURE.md
+!IMPLEMENTATION_SUMMARY.md
+!AGENTIC_*.md
+!LEVEL_2_3_COMPLETE.md
+!REFACTORING_COMPLETE.md
+!FINAL_IMPLEMENTATION_SUMMARY.md
+!DOCKER.md
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+findings.db
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.cache/
+
+# Security / sensitive files
+*.pem
+*.key
+*.crt
+.env
+.env.local
+.env.*.local
+config/secrets.yaml
+
+# AWS
+.aws/
+
+# Backup files
+*.backup
+*.bak
+*~
+
+# Editor lock files
+*.lock

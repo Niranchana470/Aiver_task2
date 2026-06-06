@@ -1,6 +1,0 @@
-{"timestamp": "2026-06-06T16:26:36.529760", "level": "INFO", "logger": "ExampleAgent", "message": "Logger initialized: ExampleAgent", "module": "logger", "function": "__init__", "line": 47}
-{"timestamp": "2026-06-06T16:26:36.529889", "level": "INFO", "logger": "ExampleAgent", "message": "Structured logs: logs/security_agent_20260606_162636.log", "module": "logger", "function": "__init__", "line": 48}
-{"timestamp": "2026-06-06T16:26:36.529951", "level": "INFO", "logger": "ExampleAgent", "message": "Starting example security scan", "module": "logger", "function": "info", "line": 56, "context": {}}
-{"timestamp": "2026-06-06T16:26:36.530320", "level": "INFO", "logger": "ExampleAgent", "message": "[ExampleCheck] Finding added: Critical - S3 Bucket Publicly Accessible (100% confidence)", "module": "logger", "function": "info", "line": 56, "context": {}}
-{"timestamp": "2026-06-06T16:26:36.530409", "level": "INFO", "logger": "ExampleAgent", "message": "[ExampleCheck] Finding added: High - IAM User Without MFA (100% confidence)", "module": "logger", "function": "info", "line": 56, "context": {}}
-{"timestamp": "2026-06-06T16:26:36.530476", "level": "INFO", "logger": "ExampleAgent", "message": "[ExampleCheck] Finding added: Medium - Security Group Allows SSH from Internet (100% confidence)", "module": "logger", "function": "info", "line": 56, "context": {}}

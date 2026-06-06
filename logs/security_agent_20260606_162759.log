@@ -1,2 +1,0 @@
-{"timestamp": "2026-06-06T16:27:59.800874", "level": "INFO", "logger": "Test", "message": "Logger initialized: Test", "module": "logger", "function": "__init__", "line": 47}
-{"timestamp": "2026-06-06T16:27:59.800984", "level": "INFO", "logger": "Test", "message": "Structured logs: logs/security_agent_20260606_162759.log", "module": "logger", "function": "__init__", "line": 48}

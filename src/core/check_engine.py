@@ -99,7 +99,7 @@ class CheckEngine:
             return {
                 "check_name": check.check_name,
                 "status": "success",
-                "findings": [f.to_dict() for f in findings],
+                "findings": findings,  # Keep as SecurityFinding objects
                 "summary": check.get_summary()
             }
         except Exception as e:

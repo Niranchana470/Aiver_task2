@@ -145,61 +145,61 @@ level2:
   api_endpoints:
     enabled: false
     endpoints:
--      - url: "https://api.example.com"
--        name: "Production API"
--      - url: "https://staging-api.example.com"
--        name: "Staging API"
--
--  dependency_scanning:
--    enabled: true
--    scan_paths:
--      - "."
--    max_file_size_mb: 10
--
--  secrets_scanning:
--    enabled: true
--    scan_paths:
--      - "."
--    max_file_size_mb: 10
--
--# Level 3: Autonomous Operations
--autonomous_mode:
--  enabled: false
--
--  # Scan scheduling
--  scan_schedule:
--    enabled: true
--    interval_minutes: 1440  # Daily
--    initial_delay_minutes: 0
--    max_retries: 3
--    retry_delay_minutes: 5
--
--  # Posture check scheduling
--  posture_check:
--    enabled: true
--    interval_minutes: 360  # Every 6 hours
--
--# Alerting Configuration
--alerting:
--  slack:
--    enabled: false
--    webhook_url: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
--
--  email:
--    enabled: false
--    host: "smtp.example.com"
--    port: 587
--    use_tls: true
--    username: "alerts@example.com"
--    password: "your-password"
--    from: "security-agent@example.com"
--    to: "security-team@example.com"
--
--# Database Configuration
--database:
--  path: "findings.db"
--  backup_enabled: true
--  backup_retention_days: 90
+      - url: "https://api.example.com"
+        name: "Production API"
+      - url: "https://staging-api.example.com"
+        name: "Staging API"
+
+  dependency_scanning:
+    enabled: true
+    scan_paths:
+      - "."
+    max_file_size_mb: 10
+
+  secrets_scanning:
+    enabled: true
+    scan_paths:
+      - "."
+    max_file_size_mb: 10
+
+# Level 3: Autonomous Operations
+autonomous_mode:
+  enabled: false
+
+  # Scan scheduling
+  scan_schedule:
+    enabled: true
+    interval_minutes: 1440  # Daily
+    initial_delay_minutes: 0
+    max_retries: 3
+    retry_delay_minutes: 5
+
+  # Posture check scheduling
+  posture_check:
+    enabled: true
+    interval_minutes: 360  # Every 6 hours
+
+# Alerting Configuration
+alerting:
+  slack:
+    enabled: false
+    webhook_url: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+
+  email:
+    enabled: false
+    host: "smtp.example.com"
+    port: 587
+    use_tls: true
+    username: "alerts@example.com"
+    password: "your-password"
+    from: "security-agent@example.com"
+    to: "security-team@example.com"
+
+# Database Configuration
+database:
+  path: "findings.db"
+  backup_enabled: true
+  backup_retention_days: 90
   # Level 2: Multi-Domain Checks
   APIEndpointCheck:
     enabled: true
