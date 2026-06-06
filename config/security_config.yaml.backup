@@ -1,0 +1,202 @@
+# Offensive Security Agent Configuration
+
+# AWS Configuration
+aws:
+  profile: default  # AWS CLI profile to use
+  region: us-east-1  # Default region for scanning
+  # Optional: Assume role configuration
+  # assume_role_arn: arn:aws:iam::ACCOUNT_ID:role/SecurityAuditRole
+  # external_id: EXTERNAL_ID
+
+# Check Configuration
+checks:
+  # S3 Bucket Security
+  S3SecurityCheck:
+    enabled: true
+    severity_threshold: Info
+    timeout: 300
+    parameters:
+      check_encryption: true
+      check_versioning: true
+      check_acl: true
+      check_public_access: true
+
+  # IAM Security
+  IAMSecurityCheck:
+    enabled: true
+    severity_threshold: Info
+    timeout: 300
+    parameters:
+      check_mfa: true
+      check_password_policy: true
+      check_inline_policies: true
+      check_key_age: true
+
+  # Security Group Configuration
+  SecurityGroupCheck:
+    enabled: true
+    severity_threshold: Info
+    timeout: 300
+    parameters:
+      check_inbound: true
+      check_outbound: true
+
+  # EC2 Instance Security
+  EC2SecurityCheck:
+    enabled: true
+    severity_threshold: Info
+    timeout: 300
+    parameters:
+      check_encryption: true
+      check_imdsv2: true
+
+  # RDS Database Security
+  RDSSecurityCheck:
+    enabled: true
+    severity_threshold: Info
+    timeout: 300
+    parameters:
+      check_encryption: true
+      check_public_access: true
+      check_backups: true
+
+  # KMS Key Security
+  KMSSecurityCheck:
+    enabled: true
+    severity_threshold: Info
+    timeout: 300
+    parameters:
+      check_rotation: true
+      check_deletion: true
+      check_permissions: true
+
+  # CloudTrail Configuration
+  CloudTrailSecurityCheck:
+    enabled: true
+    severity_threshold: Info
+    timeout: 300
+    parameters:
+      check_logging: true
+      check_encryption: true
+      check_multi_region: true
+      check_cloudwatch: true
+
+  # Lambda Function Security
+  LambdaSecurityCheck:
+    enabled: true
+    severity_threshold: Info
+    timeout: 300
+    parameters:
+      check_permissions: true
+      check_tracing: true
+      check_urls: true
+
+# Output Configuration
+output:
+  json_report: true
+  markdown_report: true
+  # Output directories
+  reports_dir: reports
+  logs_dir: logs
+
+# Logging Configuration
+logging:
+  level: INFO
+  format: json  # json or text
+  console: true
+
+# Execution Configuration
+execution:
+  max_workers: 10  # Parallel check execution
+  check_timeout: 300  # Per-check timeout in seconds
+
+# Check Definitions (for Level 2+ extension)
+check_definitions:
+  # AWS Infrastructure Checks (Level 1)
+  infrastructure:
+    - S3SecurityCheck
+    - IAMSecurityCheck
+    - SecurityGroupCheck
+    - EC2SecurityCheck
+    - RDSSecurityCheck
+    - KMSSecurityCheck
+    - CloudTrailSecurityCheck
+    - LambdaSecurityCheck
+  
+  # Application Security Checks (Level 2)
+  application:
+    - APIEndpointCheck
+    - CORSConfigurationCheck
+    - RateLimitingCheck
+    - AuthBypassCheck
+  
+  # Dependency Scanning (Level 2)
+  dependencies:
+    - CVEScanner
+    - KnownVulnerabilityCheck
+  
+  # Secrets Scanning (Level 2)
+  secrets:
+    - AWSCredentialsCheck
+    - APITokenCheck
+    - CertificateCheck
+# Level 2: Multi-Domain Configuration
+level2:
+  api_endpoints:
+    enabled: false
+    endpoints:
+-      - url: "https://api.example.com"
+-        name: "Production API"
+-      - url: "https://staging-api.example.com"
+-        name: "Staging API"
+-
+-  dependency_scanning:
+-    enabled: true
+-    scan_paths:
+-      - "."
+-    max_file_size_mb: 10
+-
+-  secrets_scanning:
+-    enabled: true
+-    scan_paths:
+-      - "."
+-    max_file_size_mb: 10
+-
+-# Level 3: Autonomous Operations
+-autonomous_mode:
+-  enabled: false
+-
+-  # Scan scheduling
+-  scan_schedule:
+-    enabled: true
+-    interval_minutes: 1440  # Daily
+-    initial_delay_minutes: 0
+-    max_retries: 3
+-    retry_delay_minutes: 5
+-
+-  # Posture check scheduling
+-  posture_check:
+-    enabled: true
+-    interval_minutes: 360  # Every 6 hours
+-
+-# Alerting Configuration
+-alerting:
+-  slack:
+-    enabled: false
+-    webhook_url: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+-
+-  email:
+-    enabled: false
+-    host: "smtp.example.com"
+-    port: 587
+-    use_tls: true
+-    username: "alerts@example.com"
+-    password: "your-password"
+-    from: "security-agent@example.com"
+-    to: "security-team@example.com"
+-
+-# Database Configuration
+-database:
+-  path: "findings.db"
+-  backup_enabled: true
+-  backup_retention_days: 90
