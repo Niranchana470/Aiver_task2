@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  offensive-security-agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: offensive-security-agent:latest
+    container_name: agentic-security-scanner
+    
+    # Environment variables for AI providers and AWS
+    environment:
+      # AI Provider Configuration
+      - AI_PROVIDER=${AI_PROVIDER:-mock}  # Options: mock, openai, anthropic
+      
+      # OpenAI (if AI_PROVIDER=openai)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      
+      # Anthropic (if AI_PROVIDER=anthropic)
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      
+      # AWS Configuration
+      - AWS_PROFILE=${AWS_PROFILE:-default}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      
+      # AWS Credentials (if not using profile)
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-}
+      
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DEBUG=${DEBUG:-false}
+    
+    # Mount volumes for persistence
+    volumes:
+      # Configuration files (editable from host)
+      - ./config:/app/config:ro
+      
+      # Logs and reports (persist to host)
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+      
+      # AWS credentials (optional, if using shared credentials)
+      - ~/.aws/credentials:/home/securityagent/.aws/credentials:ro
+      - ~/.aws/config:/home/securityagent/.aws/config:ro
+    
+    # Command to run (override default)
+    command: [
+      "--config", "config/agentic_config.yaml",
+      "--output-dir", "reports",
+      "--log-level", "INFO"
+    ]
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Service for running tests
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: offensive-security-agent:latest
+    container_name: agentic-security-test
+    
+    environment:
+      - AI_PROVIDER=mock
+      - LOG_LEVEL=DEBUG
+    
+    volumes:
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+    
+    command: ["python", "test_agentic.py"]
+    
+    profiles:
+      - test
+
+# Named volumes
+volumes:
+  logs:
+  reports:
