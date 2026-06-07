@@ -123,25 +123,17 @@ class AgenticSecurityAgent:
         """Generate JSON and Markdown reports"""
         findings = [f.to_dict() for f in self.orchestrator.get_all_findings()]
         
-        # Generate JSON report
-        json_report = self.reporter.generate_json_report(
-            results.get("execution_metadata", {}),
-            findings,
-            results.get("validation_summary", {}),
-            results.get("guard_rails_summary", {})
+        # Generate both reports using the reporter
+        report_paths = self.reporter.generate_reports(
+            execution_results=results,
+            findings=findings
         )
         
-        # Generate Markdown report
-        md_report = self.reporter.generate_markdown_report(
-            results.get("execution_metadata", {}),
-            findings,
-            results.get("validation_summary", {})
-        )
         
+        self.logger.info(f"Reports generated: {report_paths}")
         self.logger.info(
             "Reports generated",
-            json_report=str(json_report),
-            markdown_report=str(md_report)
+            **report_paths
         )
     
     def _print_agentic_summary(self, results: Dict[str, Any]) -> None:
@@ -179,7 +171,6 @@ class AgenticSecurityAgent:
         print(f"\nFindings Summary:")
         print(f"  Total Findings: {findings_summary.get('total_findings', 0)}")
         print(f"  Average Confidence: {findings_summary.get('average_confidence', 0):.2%}")
-        
         print("\nSeverity Breakdown:")
         severity_emojis = {
             "Critical": "🔴",
@@ -188,19 +179,14 @@ class AgenticSecurityAgent:
             "Low": "🟢",
             "Info": "ℹ️"
         }
-        
         for severity, count in findings_summary.get("by_severity", {}).items():
             emoji = severity_emojis.get(severity, "•")
             print(f"  {emoji} {severity.upper()}: {count}")
-        
         print("\n" + "="*70)
-    
     def _signal_handler(self, signum, frame):
         """Handle interrupt signals gracefully"""
         self.logger.info(f"Received signal {signum}, shutting down gracefully...")
         sys.exit(130)  # Standard exit code for SIGINT
-
-
 def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(

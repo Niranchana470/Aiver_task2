@@ -290,9 +290,9 @@ class IAMSecurityCheck(BaseAWSCheck):
                     key_id = key["AccessKeyId"]
                     create_date = key["CreateDate"]
                     
-                    # Calculate age
-                    from datetime import datetime, timedelta
-                    age_days = (datetime.utcnow() - create_date).days
+                    # Calculate age (handle timezone-aware datetimes)
+                    from datetime import datetime, timedelta, timezone
+                    age_days = (datetime.now(timezone.utc) - create_date).days
                     
                     if age_days > 90:
                         self.add_finding(SecurityFinding(
@@ -326,5 +326,5 @@ class IAMSecurityCheck(BaseAWSCheck):
     
     def _get_timestamp(self):
         """Get current timestamp"""
-        from datetime import datetime
-        return datetime.utcnow()
+        from datetime import datetime, timezone
+        return datetime.now(timezone.utc)

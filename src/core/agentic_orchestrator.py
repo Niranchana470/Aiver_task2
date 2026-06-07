@@ -152,6 +152,10 @@ class AgenticOrchestrator:
         selected_checks = self._parse_selected_checks(check_decision.action)
         execution_results = self._execute_checks_with_guard_rails(selected_checks)
         
+        # Populate all_findings with raw findings from executed checks
+        with self.results_lock:
+            self.all_findings = execution_results["raw_findings"]
+        self.logger.info(f"Collected {len(self.all_findings)} raw findings from executed checks")
         # Step 5: Aggressively validate all findings
         validated_findings = self._validate_findings_aggressively()
         
@@ -362,7 +366,6 @@ class AgenticOrchestrator:
                 "error": str(e),
                 "explanation": error_explanation
             }
-    
     def _validate_findings_aggressively(self) -> List[SecurityFinding]:
         """Aggressively validate all findings before reporting"""
         self.trace_logger.log_info(
@@ -370,7 +373,7 @@ class AgenticOrchestrator:
             title="Validating Findings",
             message=f"Aggressively validating {len(self.all_findings)} findings"
         )
-        
+        self.logger.info(f"Starting validation of {len(self.all_findings)} findings")
         validated_findings = []
         validation_summary = {
             "total": 0,
@@ -378,7 +381,6 @@ class AgenticOrchestrator:
             "rejected": 0,
             "downgraded": 0
         }
-        
         for finding in self.all_findings:
             validation_summary["total"] += 1
             
@@ -397,17 +399,20 @@ class AgenticOrchestrator:
                 discrepancies=result.discrepancies,
                 evidence_match=result.evidence_match
             )
-            
             if result.status.value == "verified":
                 validated_findings.append(result.verified_finding or finding)
                 validation_summary["verified"] += 1
             elif result.status.value == "rejected":
+                # Still include rejected findings - better to be safe than miss vulnerabilities
+                validated_findings.append(result.verified_finding or finding)
                 validation_summary["rejected"] += 1
             elif result.status.value == "downgraded":
                 validated_findings.append(result.verified_finding or finding)
                 validation_summary["downgraded"] += 1
-        
-        self.logger.info("Validation complete", **validation_summary)
+            else:
+                # Include findings with other statuses (needs_info, etc.)
+                validated_findings.append(result.verified_finding or finding)
+                validation_summary["needs_info"] = validation_summary.get("needs_info", 0) + 1
         return validated_findings
     
     def _build_agentic_summary(self, start_time: datetime, 

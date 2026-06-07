@@ -114,8 +114,8 @@ class KMSSecurityCheck(BaseAWSCheck):
         if key_state == "PendingDeletion":
             days_until_deletion = None
             if deletion_date:
-                from datetime import datetime, timedelta
-                days_until_deletion = (deletion_date - datetime.utcnow()).days
+                from datetime import datetime, timedelta, timezone
+                days_until_deletion = (deletion_date - datetime.now(timezone.utc)).days
             
             self.add_finding(SecurityFinding(
                 check_name=self.check_name,
@@ -225,5 +225,5 @@ class KMSSecurityCheck(BaseAWSCheck):
     
     def _get_timestamp(self):
         """Get current timestamp"""
-        from datetime import datetime
-        return datetime.utcnow()
+        from datetime import datetime, timezone
+        return datetime.now(timezone.utc)

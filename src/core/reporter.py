@@ -36,9 +36,10 @@ class SecurityReporter:
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         scan_id = f"scan_{timestamp}"
         
-        # Extract metadata
-        summary = execution_results.get("execution_summary", {})
-        exec_time_str = summary.get("execution_time")
+        # Extract metadata - support both old and new structures
+        summary = execution_results.get("execution_summary") or execution_results.get("execution_metadata", {})
+        findings_summary = execution_results.get("findings_summary", {})
+        exec_time_str = summary.get("start_time") or summary.get("execution_time")
         start_time = (
             datetime.fromisoformat(exec_time_str) if exec_time_str else datetime.utcnow()
         )
@@ -50,7 +51,7 @@ class SecurityReporter:
             total_checks=execution_results.get("total_checks", 0),
             successful_checks=execution_results.get("successful_checks", 0),
             failed_checks=execution_results.get("failed_checks", 0),
-            total_findings=summary.get("total_findings", 0)
+            total_findings=len(findings)
         )
         
         # Generate JSON report
@@ -95,7 +96,7 @@ class SecurityReporter:
             "execution_results": execution_results,
             "findings": findings,
             "severity_summary": self._calculate_severity_summary(findings),
-            "api_errors": execution_results.get("execution_summary", {}).get("api_errors", {})
+            "api_errors": execution_results.get("error_summary", execution_results.get("execution_summary", {})).get("api_errors", {})
         }
         
         json_path = self.reports_dir / f"{scan_id}_report.json"
