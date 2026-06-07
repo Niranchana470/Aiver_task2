@@ -55,8 +55,8 @@ class AgenticSecurityAgent:
         })
         
         # Load configuration
-        self.config_loader = ConfigLoader()
-        self.config = self.config_loader.load_config(config_path)
+        self.config_loader = ConfigLoader(config_path)
+        self.config = self.config_loader.to_dict()
         
         self.logger.info("Agentic Security Agent initialized", config=config_path)
         
@@ -67,7 +67,7 @@ class AgenticSecurityAgent:
         self._register_checks()
         
         # Initialize reporter
-        self.reporter = SecurityReporter(self.config, self.logger)
+        self.reporter = SecurityReporter(self.logger)
         
         # Setup signal handlers
         signal.signal(signal.SIGINT, self._signal_handler)
