@@ -1,179 +1,121 @@
-# Agentic Security Agent Configuration
-# This configuration includes AI provider settings and guard rails
+# Offensive Security Agent - Level 2 Configuration  
+# Multi-domain scanning with AI-powered agentic features
 
 # AI Provider Configuration
 ai_provider:
-  # Provider: openai, anthropic, mock
-  provider: "mock"  # Set to "mock" for testing without API keys
-  
-  # OpenAI Configuration
-  model: "gpt-4"  # or "gpt-3.5-turbo" for faster/cheaper
-  api_key: null  # Set OPENAI_API_KEY environment variable or put key here
+  provider: "mock"  # Options: "mock", "openai", "anthropic"
+  model: "gpt-4"
+  api_key: null  # Set OPENAI_API_KEY environment variable for OpenAI
   temperature: 0.0  # Low temp for consistent reasoning
-  
-  # Anthropic Configuration (if provider is "anthropic")
-  # model: "claude-3-opus-20240229"
-  # api_key: null  # Set ANTHROPIC_API_KEY environment variable
 
 # Guard Rails Configuration
 guard_rails:
-  # AWS Account restrictions
-  allowed_account_ids: null  # null = any account, or specify: ["123456789012", "210987654321"]
+  allowed_account_ids: ["*"]  # Scan all accounts (use specific IDs for production)
   forbidden_account_ids: []  # Never scan these accounts
-  
-  # Region restrictions
-  allowed_regions: null  # null = any region, or specify: ["us-east-1", "us-west-2"]
-  forbidden_regions: []  # Never scan these regions
-  
-  # Resource type restrictions
-  allowed_resource_types: null  # null = all, or specify: ["s3", "iam", "ec2"]
-  forbidden_resource_types: []  # Never scan these
-  
-  # Action restrictions
-  read_only: true  # Only allow read operations (recommended for security scanning)
-  allow_destructive: false  # Never allow destructive operations
-  
-  # Rate limiting
-  max_api_calls_per_minute: 1000
-  max_concurrent_requests: 20
-  
-  # Safety checks
+  read_only: true  # Only allow read operations
   require_approval_for_critical: true  # Require approval for critical operations
-  dry_run: false  # Log what would happen, don't execute (testing mode)
+  dry_run: false  # Set true for testing (logs what would happen)
 
-# AWS Configuration (same as before)
+# AWS Configuration
 aws:
   profile: default
   region: us-east-1
+  assume_role_arn: null
+  external_id: null
 
-# Check Configuration (same as before)
+# Security Checks Configuration
 checks:
+  # Level 1: Infrastructure Checks
   S3SecurityCheck:
     enabled: true
     severity_threshold: Info
     timeout: 300
-    parameters:
-      check_encryption: true
-      check_versioning: true
-      check_acl: true
-      check_public_access: true
+    parameters: {}
 
   IAMSecurityCheck:
     enabled: true
     severity_threshold: Info
     timeout: 300
-    parameters:
-      check_mfa: true
-      check_password_policy: true
-      check_inline_policies: true
-      check_key_age: true
+    parameters: {}
 
   SecurityGroupCheck:
     enabled: true
     severity_threshold: Info
     timeout: 300
-    parameters:
-      check_inbound: true
-      check_outbound: true
+    parameters: {}
 
   EC2SecurityCheck:
     enabled: true
     severity_threshold: Info
     timeout: 300
-    parameters:
-      check_encryption: true
-      check_imdsv2: true
+    parameters: {}
 
   RDSSecurityCheck:
     enabled: true
     severity_threshold: Info
     timeout: 300
-    parameters:
-      check_encryption: true
-      check_public_access: true
-      check_backups: true
+    parameters: {}
 
   KMSSecurityCheck:
     enabled: true
     severity_threshold: Info
     timeout: 300
-    parameters:
-      check_rotation: true
-      check_deletion: true
-      check_permissions: true
+    parameters: {}
 
   CloudTrailSecurityCheck:
     enabled: true
     severity_threshold: Info
     timeout: 300
-    parameters:
-      check_logging: true
-      check_encryption: true
-      check_multi_region: true
-      check_cloudwatch: true
+    parameters: {}
 
   LambdaSecurityCheck:
     enabled: true
     severity_threshold: Info
     timeout: 300
-    parameters:
-      check_permissions: true
-      check_tracing: true
-      check_urls: true
+    parameters: {}
 
-  # Level 2+ Checks
+  # Level 2: Multi-Domain Checks
   APIEndpointCheck:
-    enabled: true
+    enabled: false  # Set true and configure endpoints below
     severity_threshold: Info
     timeout: 300
     parameters:
       endpoints:
-        - url: "https://dv08.in"
-          name: "dv08.in Production"
-        - url: "https://httpbin.org"
-          name: "Test API"
-        - url: "https://api.github.com"
-          name: "GitHub API"
-        - url: "https://jsonplaceholder.typicode.com"
-          name: "JSONPlaceholder Test API"
-        - url: "https://reqres.in/api"
-          name: "ReqRes API"
+        # - url: "https://api.example.com"
+        #   name: "Production API"
+        #   auth_required: true
 
   CVEScanner:
     enabled: true
     severity_threshold: Info
     timeout: 300
     parameters:
-      scan_paths:
-        - "."
-      max_file_size_mb: 10
+      scan_paths: ["."]
 
   SecretsScanner:
     enabled: true
     severity_threshold: Info
     timeout: 300
     parameters:
-      scan_paths:
-        - "."
-      max_file_size_mb: 10
+      scan_paths: ["."]
 
 # Output Configuration
 output:
-  json_report: true
-  markdown_report: true
-  reports_dir: reports
-  logs_dir: logs
+  json: true
+  markdown: true
+  output_dir: reports
 
 # Logging Configuration
 logging:
-  level: INFO  # DEBUG for verbose decision trace logging
-  format: json  # json or text
-  console: true
+  level: INFO
+  log_dir: logs
+  structured: true
 
 # Execution Configuration
 execution:
   max_workers: 10
-  check_timeout: 300
+  timeout: 600
+  continue_on_error: true
 
 # Debug mode (enables verbose decision trace)
 debug: false
