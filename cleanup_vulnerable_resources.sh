@@ -160,11 +160,11 @@ echo "7. Resetting password policy to secure defaults..."
 
 aws iam update-account-password-policy \
   --minimum-password-length 12 \
-  --require-symbols true \
-  --require-numbers true \
-  --require-uppercase-characters true \
-  --require-lowercase-characters true \
-  --allow-users-to-change-password true \
+  --require-symbols \
+  --require-numbers \
+  --require-uppercase-characters \
+  --require-lowercase-characters \
+  --allow-users-to-change-password \
   --max-password-age 90 \
   --password-reuse-prevention 24
 

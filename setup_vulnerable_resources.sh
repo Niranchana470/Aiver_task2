@@ -156,11 +156,7 @@ echo "5. Setting weak password policy..."
 # Set weak password policy (no requirements)
 aws iam update-account-password-policy \
   --minimum-password-length 8 \
-  --require-symbols false \
-  --require-numbers false \
-  --require-uppercase-characters false \
-  --require-lowercase-characters false \
-  --allow-users-to-change-password true \
+  --allow-users-to-change-password \
   --max-password-age 0 \
   --password-reuse-prevention 0 2>/dev/null || echo "  (Could not update password policy)"
 
